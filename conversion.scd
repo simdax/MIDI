@@ -3,15 +3,13 @@
 
 // ça c'est la stratégie, à une note de l'échelle correspond un degré fort
 ~a=(
-convertMIDI:{
-	arg t, val;
-	val%12
-},
-note2Chord:{arg s, note;
-	60+
-	[0,\x, 1, \x ,0,-1,\x, 1,\x, -1,\x, 1].at(s.convertMIDI(note))
-	.switch(0,[0,4,7],1,[-1,2,7],-1,[0,5,9])
-}
+	convertDeg:{
+		arg s, deg;
+		switch(deg%7,
+			1,4,2,0,6,4,
+			deg
+		); 
+	}
 );
 
 // version intervallique styléée
@@ -27,20 +25,20 @@ note2Chord:{arg s, note;
 	// ensuite la note de triade de la note de la mélodie actuelle
 	triade: Pseq([0,1,2], inf).iter,
 	// les fonctions
-	scale: {arg s; Scale.at(s.mode).degrees+s.root},
+	scale: {arg s; (Scale.at(s.mode).degrees+s.root)%12},
 	degree:{arg s;
 		try{
-			var res=s.scale.indexOf(s.pitch%12) - (s.triade.next*2);
+			var res=s.scale.postln.indexOf((s.pitch%12)) - (s.triade.next*2);
 			if(res==s.prevDeg){
-				"p".postln;
+				"same degree".postln;
 			};
 			s.prevDeg=res;
-			res
+			res=~a.convertDeg(res)
 		}
 	},
 	accord:{arg s;
 		var deg=s.degree;
-		if(deg.postln.isNil)
+		if(deg.isNil)
 		{Array.series(4, s.pitch%12,3)}
 		{s.scale@@([0,2,4]+deg)}
 	},
@@ -50,6 +48,7 @@ note2Chord:{arg s, note;
 		s.pitch=(p); 
 		res=s.accord+60;
 		~voiceLead.mvts(res).postln;
+		//		("triade, degree :"++[s.tri, s.degree]).postln;
 		res
 	}
 )
