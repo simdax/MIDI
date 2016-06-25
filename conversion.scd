@@ -24,24 +24,32 @@ note2Chord:{arg s, note;
 	// et pour l'instant en do
 	root:0,
 	mode:\major, //[\maj, \min].choose,
-
 	// ensuite la note de triade de la note de la mélodie actuelle
 	triade: Pseq([0,1,2], inf).iter,
-
 	// les fonctions
 	scale: {arg s; Scale.at(s.mode).degrees+s.root},
-	degree:{arg s; s.scale.indexOf(s.pitch%12) - (s.triade.next)},
-	// pour l'instant on s'embête pas
-	basse:{arg s; s.degree},
-	asStr:{ arg s, args;
-		r{ 
-			var pitches=Pseq(args, inf).iter;
-			loop{
-				s.pitch=(pitches.next.postln); s.basse.yield;
-			}
+	degree:{arg s;
+		try{
+			var res=s.scale.indexOf(s.pitch%12) - (s.triade.next*2);
+			if(res==s.prevDeg){
+				"p".postln;
+			};
+			s.prevDeg=res;
+			res
 		}
+	},
+	accord:{arg s;
+		var deg=s.degree;
+		if(deg.postln.isNil)
+		{Array.series(4, s.pitch%12,3)}
+		{s.scale@@([0,2,4]+deg)}
+	},
+	// pour l'instant on s'embête pas
+	note2Chord:{ arg s, p;
+		s.pitch=(p); 
+		s.accord+60;
 	}
-)//.asStr([60,62,64,65,67].scramble.postln).iter.nextN(8)
+)
 
 )
 

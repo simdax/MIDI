@@ -20,7 +20,7 @@ MIDIdef.noteOn(\a, {arg ...args;
 	routine=b.value.play;
 	
 	// play
-	(midinote:~a.note2Chord(args[1]),
+	(midinote:~b.note2Chord(args[1]),
 		type:\midi, midiout:mOut ).play(0);
 	
 	// store
