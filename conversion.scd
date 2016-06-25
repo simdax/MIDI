@@ -15,7 +15,7 @@ note2Chord:{arg s, note;
 );
 
 // version intervallique styléée
-"./noteConv.scd".load;
+"./noteConv.scd".loadRelative;
 
 ~b=(
 	// les deux choses possibles : on est en mode majeur ou en mineur
@@ -46,8 +46,11 @@ note2Chord:{arg s, note;
 	},
 	// pour l'instant on s'embête pas
 	note2Chord:{ arg s, p;
+		var res;
 		s.pitch=(p); 
-		s.accord+60;
+		res=s.accord+60;
+		~voiceLead.mvts(res).postln;
+		res
 	}
 )
 

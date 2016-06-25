@@ -8,7 +8,7 @@
 var routine;
 var mOut=MIDIOut(5);
 
-"./conversion.scd".load;
+"./conversion.scd".loadRelative;
 
 mOut.latency=0;
 
