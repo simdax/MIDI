@@ -14,6 +14,7 @@
 
 // version intervallique styléée
 "./noteConv.scd".loadRelative;
+"./voiceLeading.scd".loadRelative;
 
 ~b=(
 	// les deux choses possibles : on est en mode majeur ou en mineur
@@ -28,12 +29,12 @@
 	scale: {arg s; (Scale.at(s.mode).degrees+s.root)%12},
 	degree:{arg s;
 		try{
-			var res=s.scale.postln.indexOf((s.pitch%12)) - (s.triade.next*2);
+			var res=s.scale.indexOf(s.pitch%12) - (s.triade.next*2);
 			if(res==s.prevDeg){
 				"same degree".postln;
 			};
-			s.prevDeg=res;
-			res=~a.convertDeg(res)
+			res=~a.convertDeg(res);
+			s.prevDeg=res; res;
 		}
 	},
 	accord:{arg s;
@@ -54,5 +55,4 @@
 )
 
 )
-
 

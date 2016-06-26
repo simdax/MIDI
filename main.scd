@@ -1,52 +1,21 @@
-// =====================================================================
-// SuperCollider Workspace
-// =====================================================================
-
-
-
 (
-var routine;
-var mOut=MIDIOut(5);
+var pat, a, b;
 
-"./conversion.scd".loadRelative;
+"./midiConnec.scd".loadRelative;
+pat=Pdef(\a,
+	Pbind(
+			\midinote,	Pfunc{
+				~b.note2Chord(~note)
+			},
+			\type, \midi, \midiout, ~mOut
+		)
+	);
 
-mOut.latency=0;
 
-~phrases=nil; ~beats=0;
+a=Window().front;
+b=Button(a).action_{
+	defer{pat.toggle};
+	~go=thisThread.beats
+}
 
-MIDIdef.noteOn(\a, {arg ...args;
-	//restart routine
-	routine.stop;
-	routine=b.value.play;
-	
-	// play
-	(midinote:~b.note2Chord(args[1]),
-		type:\midi, midiout:mOut ).play(0);
-	
-	// store
-	~mem=~mem.add([args[1], ~beats])
-});
-
-b={	
-	Task({
-		var clock=TempoClock();
-		var now=0;
-		while{
-			now=clock.beats-now;
-			~beats=now;
-			now<1;
-		}{
-			0.005.wait
-		};
-		~phrases=~phrases.add(
-			~mem
-		);
-		"ajouté : ".post; ~phrases.last.postln;
-		~mem=nil; ~beats=0
-	})}
 )
-
-
-
-
-
