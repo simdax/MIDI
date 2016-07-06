@@ -12,7 +12,7 @@ pat=Pdef(\a,
 	);
 
 
-a=Window().front;
+a=Window().front; 
 b=Button(a).action_{
 	defer{pat.toggle};
 	~go=thisThread.beats
