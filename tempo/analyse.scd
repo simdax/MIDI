@@ -30,21 +30,9 @@ b=r{
 			var variance=b.next(dur);
 			(dur:dur, variance:variance).yield
 	}
-}
-};
-/// routine pour affichage des val solfegique
-~solf={r{
-	arg inval;
-	var poin=2;
-	var val="double croche noire blanche ronde".split($ );
-	loop{
-		inval=if(inval.isNil or: (inval==inf) or: (inval==0))
-			{nil}
-			{poin=poin+log2(inval).round;
-			val[poin]}
-		.yield
 	}
-}}
+};
+"solfege.scd".loadRelative;
 )
 
 //// MIDI final
